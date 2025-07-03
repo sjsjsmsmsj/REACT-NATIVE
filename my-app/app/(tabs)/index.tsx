@@ -1,16 +1,22 @@
+import { Button } from 'react-native';
+import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
+  
+
+  const [count, setCount] = useState<number>(0);
+  
   return (
     <View style={styles.container}>
-      <View>
-        <Text style={styles.header}>Lam gia thinh</Text>
         <Text style={styles.parent}>
-          Lam gia thinh 2 
-          <Text style={styles.child}>Bla bla</Text>
-        </Text>
+        {count}
+      </Text>
+      <View> 
+        <Button title="Increase" onPress={() => {
+          setCount(count + 1)
+        }} />
       </View>
-      <Text style={styles.hello1}>Hello World 👋 from Expo Router!</Text>
     </View>
   );
 }
