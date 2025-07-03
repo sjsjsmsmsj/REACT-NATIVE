@@ -1,14 +1,42 @@
 import { Button } from 'react-native';
 import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-
+import { TextInput } from 'react-native';
 export default function HomeScreen() {
   
 
   const [count, setCount] = useState<number>(0);
+  const [name, setName] = useState<string>("");
+  const [age, setAge] = useState<number>(1);
   
   return (
     <View style={styles.container}>
+      <View>
+        <Text>Name: {name}</Text>
+        <TextInput
+          multiline
+          autoCapitalize={"words"}
+          onChangeText={(value) => setName((value))} style={{
+          borderColor: 'green', 
+          borderWidth: 1, 
+          width: 200, 
+          padding: 15
+        }} />
+      </View>
+
+      <View>
+        <Text>Age: {age}</Text>
+        <TextInput onChangeText={(value) => setAge(Number(value))} style={{
+          borderColor: 'green', 
+          borderWidth: 1, 
+          width: 200, 
+          padding: 15
+        }}
+          keyboardType="numeric"
+          maxLength={2}
+        />
+      </View>
+
         <Text style={styles.parent}>
         {count}
       </Text>
