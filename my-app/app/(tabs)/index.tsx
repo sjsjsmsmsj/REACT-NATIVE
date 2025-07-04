@@ -2,7 +2,7 @@ import { Button } from 'react-native';
 import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { FlatList, ScrollView } from 'react-native-gesture-handler';
 export default function HomeScreen() {
   const [students, setStudents] = useState([
     { id: 1, name: "Thinh", 'age': 20 }, 
@@ -13,7 +13,18 @@ export default function HomeScreen() {
   ]);
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 60}}>
+      <FlatList
+        data={students}
+        keyExtractor={item => item.id + ""}
+        renderItem={data => {
+          return (
+            <View style={{padding: 15, backgroundColor: 'pink', marginBottom: 10}}>
+              <Text>{data.item.name}</Text>
+            </View>
+          )
+        }}
+      />
+      {/* <Text style={{fontSize: 60}}>
         Hello world
       </Text>
       <ScrollView>
@@ -24,7 +35,7 @@ export default function HomeScreen() {
             </View>
           )
         })}
-      </ScrollView>
+      </ScrollView> */}
     </View>
   );
 }
