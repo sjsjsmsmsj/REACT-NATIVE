@@ -1,74 +1,100 @@
-import { Button } from 'react-native';
-import { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
+import { Alert, Button, FlatList, TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import FlexBox from '../../components/FlexBox'
+
+interface ITodo {
+  id: number;
+  name: string;
+}
+
 export default function HomeScreen() {
-  const [students, setStudents] = useState([
-    { id: 1, name: "Thinh", 'age': 20 }, 
-    { id: 2, name: "Thinh2", 'age': 20 }, 
-    { id: 3, name: "Thinh3", 'age': 20 }, 
-    { id: 4, name: "Thinh4", 'age': 20 }, 
-    {id: 5, name: "Thinh5", 'age': 20}, 
-  ]);
+  const [toDo, setToDo] = useState("");
+  const [listToDo, setListToDo] = useState<ITodo[]>([]);
+
+  function randint(min: number, max: number) {
+    return Math.round((Math.random() * Math.abs(max - min)) + min);
+  }
+
+  const handleAddToDo = () => {
+    if (!toDo.trim()) {
+      Alert.alert("Error", "ToDo must not be empty",
+        [
+      {
+        text: 'Cancel',
+        onPress: () => Alert.alert('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ],
+    {
+      cancelable: true,
+      onDismiss: () =>
+        Alert.alert(
+          'This alert was dismissed by tapping outside of the alert dialog.',
+        ),
+    },
+      );
+      return;
+    }
+    setListToDo([...listToDo, { id: randint(1, 1000), name: toDo }]);
+    setToDo("");
+  }
+
+  const deleteToDo = (id: number) => {
+    const newToDo = listToDo.filter(item => item.id !== id);
+    setListToDo(newToDo);
+  }
+
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={students}
-        keyExtractor={item => item.id + ""}
-        renderItem={data => {
-          return (
-            <View style={{padding: 15, backgroundColor: 'pink', marginBottom: 10}}>
-              <Text>{data.item.name}</Text>
-            </View>
-          )
-        }}
-      />
-      {/* <Text style={{fontSize: 60}}>
-        Hello world
-      </Text>
-      <ScrollView>
-        {students.map(item => {
-          return (
-            <View key={item.id} style={{padding: 15, backgroundColor: 'pink', marginBottom: 10}}>
-              <Text>{item.name}</Text>
-            </View>
-          )
-        })}
-      </ScrollView> */}
-    </View>
+    // <View style={styles.container}>
+    //   <Text style={styles.header}>ToDo App</Text>
+    //   <TextInput
+    //     value={toDo}
+    //     style={styles.toDoInput}
+    //     onChangeText={setToDo}
+    //     placeholder="Enter your task..."
+    //   />
+    //   <Button title={'Add ToDo'} onPress={handleAddToDo} />
+    //   <View style={styles.body}>
+    //     <FlatList
+    //       data={listToDo}
+    //       keyExtractor={(item) => item.id.toString()}
+    //       renderItem={({ item }) => (
+    //         <TouchableOpacity onPress={() => deleteToDo(item.id)}>
+    //           <Text style={styles.list}>{item.name}</Text>
+    //         </TouchableOpacity>
+    //       )}
+    //     />
+    //   </View>
+    // </View>
+    <FlexBox/>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50, 
-    paddingHorizontal: 20,
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     backgroundColor: '#f2f2f2',
   },
-  text: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  hello1: {
-    color: 'pink',
-    width: 200, 
-    borderColor: 'green', 
-    borderWidth: 2
-  },
   header: {
-    fontSize: 30, 
-    fontWeight: "600"
-  }, 
-  parent: {
-    color: 'red',
-    fontSize: 30
-  }, 
-  child: {
-    color: 'blue', 
-    fontSize: 20
+    backgroundColor: 'orange',
+    paddingHorizontal: 20,
+    textAlign: 'center',
+    fontSize: 60,
+  },
+  toDoInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: "green",
+    margin: 15,
+  },
+  body: {
+    margin: 15,
+  },
+  list: {
+    borderColor: "grey",
+    borderWidth: 1,
+    borderStyle: "dashed",
+    padding: 10,
+    margin: 10,
   }
 });
