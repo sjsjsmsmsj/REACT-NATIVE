@@ -1,122 +1,50 @@
-import { Alert, Button, FlatList, TextInput, TouchableOpacity, View, Text, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import FlexBox from '../../components/FlexBox'
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AboutScreen from "@/components/review/about";
+import DetailScreen from "@/components/review/detail";
+import HomeScreen from "@/components/review/home";
+import { useFonts } from "expo-font";
+import { SplashScreen } from "expo-router";
+import { useEffect } from "react";
+import { View, Text, StyleSheet } from "react-native";
 
-interface ITodo {
-  id: number;
-  name: string;
-}
+const App = () => {
+  const [loaded, error] = useFonts({
+    'LamGiaThinh': require('../../assets/fonts/SpaceMono-Regular.ttf'),
+  });
 
-export default function HomeScreen() {
-  const [toDo, setToDo] = useState("");
-  const [listToDo, setListToDo] = useState<ITodo[]>([]);
+  useEffect(() => {
+    // Gọi khi app mount để giữ splash screen lại
+    SplashScreen.preventAutoHideAsync();
+  }, []);
 
-  function randint(min: number, max: number) {
-    return Math.round((Math.random() * Math.abs(max - min)) + min);
-  }
-
-  const handleAddToDo = () => {
-    if (!toDo.trim()) {
-      Alert.alert("Error", "ToDo must not be empty",
-        [
-      {
-        text: 'Cancel',
-        onPress: () => Alert.alert('Cancel Pressed'),
-        style: 'cancel',
-      },
-    ],
-    {
-      cancelable: true,
-      onDismiss: () =>
-        Alert.alert(
-          'This alert was dismissed by tapping outside of the alert dialog.',
-        ),
-    },
-      );
-      return;
+  useEffect(() => {
+    // Khi load xong thì hide splash
+    if (loaded || error) {
+      SplashScreen.hideAsync();
     }
-    setListToDo([...listToDo, { id: randint(1, 1000), name: toDo }]);
-    setToDo("");
-  }
+  }, [loaded, error]);
 
-  const deleteToDo = (id: number) => {
-    const newToDo = listToDo.filter(item => item.id !== id);
-    setListToDo(newToDo);
+  if (!loaded && !error) {
+    return (
+      <View style={styles.container}>
+        <Text>Đang tải font...</Text>
+      </View>
+    );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>ToDo App</Text>
-      <View style={styles.form}>
-        <TextInput
-          value={toDo}
-          style={styles.toDoInput}
-          onChangeText={setToDo}
-          placeholder="Enter your task..."
-        />
-        <Button title={'Add ToDo'} onPress={handleAddToDo} />
-      </View>
-
-      <View style={styles.todo}>
-        <FlatList
-          data={listToDo}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => deleteToDo(item.id)}>
-              <View style={styles.groupToDo}>
-                <Text style={styles.list}>{item.name} </Text>
-                <AntDesign name="close" size={24} color="black" />
-              </View>
-              
-            </TouchableOpacity>
-          )}
-        />
-      </View>
+      <HomeScreen />
+      <DetailScreen />
+      <AboutScreen />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
-  },
-  groupToDo: {
-    flexDirection: "row", 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
-    borderWidth: 1,
-    borderStyle: "dashed",
-  },
-  header: {
-    backgroundColor: 'orange',
-    paddingHorizontal: 20,
-    textAlign: 'center',
-    fontSize: 60,
-    flex: 1
-  }, 
-  form: {
-    flex: 1
-  },
-  todo: {
-    flex: 8
-  },
-  toDoInput: {
-    borderBottomWidth: 1,
-    borderBottomColor: "green",
-    margin: 15,
-  },
-  body: {
-    margin: 15,
-    flex: 1
-  },
-
-  list: {
-    borderColor: "grey",
-
-    padding: 10,
-    margin: 10,
+    backgroundColor: 'white'
   }
 });
+
+export default App;
