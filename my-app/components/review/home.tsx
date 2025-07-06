@@ -1,9 +1,14 @@
+import { globalStyles } from "@/utils/const";
+import { Button } from "react-native";
 import { View, Text } from "react-native"
 
-const HomeScreen = () => {
+const HomeScreen = (props: any) => {
+    const { navigation } = props; 
+
     return (
         <View>
-            <Text>Home Screen</Text>
+            <Text style={globalStyles.globalFont}>Home Screen</Text>
+            <Button title="VIEW DETAIL" onPress={() => navigation.navigate("review-detail")} />
         </View>
     )
 }
